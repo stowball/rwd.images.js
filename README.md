@@ -109,3 +109,25 @@ Something like:
 })();
 </script>
 ```
+
+#### Things to note
+
+There may be times where your image is outside of a container that constrains its size. This will lead to the image continuing to scale past its original size.
+
+To prevent this, set a relevant breakpoint to reset the image's dimensions, and also apply it to the fallback if appropriate:
+
+```html
+<img class="rwdimage" data-rwdimage="
+	{ src: url(/images/4-by-3.jpg); padding-bottom: ratio(3/4); },
+	(min-width: 501px) { src: url(/images/16-by-9.jpg); padding-bottom: ratio(9/16); }
+	(min-width: 1000px) { height: 562px; padding-bottom: 0; width: auto; }
+" data-rwdimage-fallback="
+	{ src: url(/images/16-by-9.jpg); height: 562px; padding-bottom: 0; width: auto; }
+" />
+```
+
+---
+
+Copyright (c) 2014 Matt Stow  
+Licensed under the MIT license (see LICENSE for details)  
+Minified version created with Online YUI Compressor: http://www.refresh-sf.com/yui/
