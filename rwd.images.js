@@ -10,7 +10,7 @@
  * Licensed under the MIT license
 */
 ;(function(document) {
-	var $rwdImages = document.getElementsByClassName('rwdimage')
+	var $rwdImages = document.getElementsByClassName('rwdimage');
 		rwdImagesLength = $rwdImages.length;
 	
 	if (rwdImagesLength === 0)
