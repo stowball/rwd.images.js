@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.2.0
+ * RWD Images v0.3.0
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -10,8 +10,27 @@
  * Licensed under the MIT license
 */
 ;(function(document) {
-	var $rwdImages = document.getElementsByClassName('rwdimage'),
-		rwdImagesLength = $rwdImages.length;
+	var $rwdImages,
+		rwdImagesLength;
+	
+	// So much faster http://jsperf.com/byclassname-vs-queryselectorall
+	if (document.getElementsByClassName) {
+		$rwdImages = document.getElementsByClassName('rwdimage');
+	}
+	else if (document.querySelectorAll) {
+		$rwdImages = document.querySelectorAll('.rwdimage');
+	}
+	else {
+		$rwdImages = [];
+		var $allImages = document.getElementsByTagName('img');
+		
+		for (var a = 0; a < $allImages.length; a++) {
+			if ($allImages[a].className.match(/rwdimage/g))
+				$rwdImages.push($allImages[a]);
+		}
+	}
+	
+	rwdImagesLength = $rwdImages.length;
 	
 	if (rwdImagesLength === 0)
 		return;
@@ -39,7 +58,7 @@
 		x = 0,
 		hasQuerySelector = !!document.querySelector,
 		hasEnquire = !!window.enquire,
-		styleTag;
+		style;
 	
 	for (i; i < rwdImagesLength; i++) {
 		$this = $rwdImages[i];
@@ -152,9 +171,16 @@
 	// Output the default styles and all of the generated rules
 	css = '.rwdimage { background-repeat: no-repeat; background-size: contain; height: 0; width: 100%; }\n' + css;
 	
-	styleTag = document.createElement('style');
-	styleTag.appendChild(document.createTextNode(css));
-	document.head.appendChild(styleTag);
+	style = document.createElement('style');
+	style.type = 'text/css';
+	
+	// For LT IE 9
+	if (style.styleSheet)
+		style.styleSheet.cssText = css;
+	else
+		style.appendChild(document.createTextNode(css));
+	
+	document.getElementsByTagName('head')[0].appendChild(style);
 	
 	window.hasComputedStyle = !!window.getComputedStyle;
 	
