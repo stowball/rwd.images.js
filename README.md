@@ -2,7 +2,7 @@
 
 ## Yet another lightweight, customisable responsive image solution
 
-*Note: Better docs and demos are comning soon*
+*Note: Better docs and demos are coming soon*
 
 I know what you're thinking. Aren't there enough responsive image solutions by now? Until `<picture>` is standard and we can use it everywhere, I'm going to say "no".
 
