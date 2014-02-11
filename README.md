@@ -68,7 +68,6 @@ So, the `<img>`:
 	(min-width: 501px) { src: url(/images/16-by-9.jpg); padding-bottom: ratio(9/16); }
 " />
 
-<script src="/js/enquire.min.js"></script>
 <script src="/js/rwd.images.min.js"></script>
 </body>
 ```
