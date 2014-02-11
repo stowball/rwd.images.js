@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.3.0
+ * RWD Images v0.4.0
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -80,6 +80,9 @@
 			if (!$this.src)
 				$this.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEHAAAALAAAAAABAAEAAAICRAEAOw==';
 			
+			if (hasEnquire)
+				$this.setAttribute('data-rwdimage-has-enquire', true);
+			
 			images[i]['isImage'] = true;
 		}
 		
@@ -92,7 +95,7 @@
 		cssTemp = '';
 		
 		var cssReplace = function(str) {
-			// Remove any leading whitespace, change image: to background-image and calculate ratio percentages
+			// Remove any leading whitespace, change src: to background-image and calculate ratio percentages
 			return str
 					.replace(/(^\s*)/, '')
 					.replace(/src:\s*/gi, 'background-image: ')
@@ -169,7 +172,9 @@
 	}
 	
 	// Output the default styles and all of the generated rules
-	css = '.rwdimage { background-repeat: no-repeat; background-size: contain; height: 0; width: 100%; }\n' + css;
+	css = 	'.rwdimage { background-repeat: no-repeat; background-size: contain; height: 0; width: 100%; }\n' +
+			css +
+			'.rwdimage[data-rwdimage-has-enquire="true"] { height: auto; padding-bottom: 0; width: auto; }\n';
 	
 	style = document.createElement('style');
 	style.type = 'text/css';
