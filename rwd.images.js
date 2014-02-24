@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.4.0
+ * RWD Images v0.4.1
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -200,6 +200,9 @@
 	
 	// Register with enquire.js on each of the images' media queries to change their src
 	var registerWithEnquire = function(x, y) {
+		if (!images[x]['breakpoints'][y]['mediaquery'])
+			return;
+		
 		enquire.register(images[x]['breakpoints'][y]['mediaquery'], function () {
 			rwdImageChangeSrc(images[x]['elem']);
 		});
