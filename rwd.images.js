@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.4.1
+ * RWD Images v0.4.2
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -125,7 +125,7 @@
 						dataCoreCurrent
 						.match(/.*?\{/)[0] +
 						selector +
-						dataCoreCurrent.replace(/(\((min|max).*?\)|\s?(and)\s?)/g, '') +
+						dataCoreCurrent.replace(/(\((min|max).*?\)|\s+and\s+)/g, '') +
 						' }\n';
 				
 				// Store all of the breakpoints in an array
