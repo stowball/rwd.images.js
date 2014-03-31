@@ -60,6 +60,16 @@
 		hasEnquire = !!window.enquire,
 		style;
 	
+	var cssReplace = function(str) {
+		// Remove any leading whitespace, change src: to background-image and calculate ratio percentages
+		return str
+				.replace(/(^\s*)/, '')
+				.replace(/src:\s*/gi, 'background-image: ')
+				.replace(/ratio\((\d+\/\d+)\)/gi, function(str, p1) {
+					return (eval(p1) * 100) + '%';
+				});
+	};
+
 	for (i; i < rwdImagesLength; i++) {
 		$this = $rwdImages[i];
 		
@@ -93,16 +103,6 @@
 		dataEmBase = $this.getAttribute('data-rwdimage-em-base') ? parseInt($this.getAttribute('data-rwdimage-em-base')) : 16;
 		
 		cssTemp = '';
-		
-		var cssReplace = function(str) {
-			// Remove any leading whitespace, change src: to background-image and calculate ratio percentages
-			return str
-					.replace(/(^\s*)/, '')
-					.replace(/src:\s*/gi, 'background-image: ')
-					.replace(/ratio\((\d+\/\d+)\)/gi, function(str, p1) {
-						return (eval(p1) * 100) + '%';
-					});
-		};
 		
 		for (var j = 0; j < dataCoreLength; j++) {
 			dataCoreCurrent = cssReplace(dataCore[j]);
