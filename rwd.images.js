@@ -100,7 +100,7 @@
 			images[i]['elem'] = document.querySelector(selector);
 		
 		dataEm = $this.getAttribute('data-rwdimage-em') === 'true' ? true : false;
-		dataEmBase = $this.getAttribute('data-rwdimage-em-base') ? parseInt($this.getAttribute('data-rwdimage-em-base')) : 16;
+		dataEmBase = $this.getAttribute('data-rwdimage-em-base') ? parseInt($this.getAttribute('data-rwdimage-em-base'), 10) : 16;
 		
 		cssTemp = '';
 		
@@ -116,7 +116,7 @@
 				// If specified, convert pixel media queries to ems
 				if (dataEm) {
 					dataCoreCurrent = dataCoreCurrent.replace(/m(?:in|ax)-(?:width|height):\s*(\d+)px/gi, function(str, p1) {
-						return str.replace(p1, parseInt(p1, 10) / dataEmBase).replace('px', 'em')
+						return str.replace(p1, parseInt(p1, 10) / dataEmBase).replace('px', 'em');
 					});
 				}
 				
