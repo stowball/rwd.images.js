@@ -187,36 +187,44 @@
 	
 	document.getElementsByTagName('head')[0].appendChild(style);
 	
-	window.hasComputedStyle = !!window.getComputedStyle;
-	
 	// Change the img src to its computed background-image src. If lazy-loading, fire this externally as DOMAttrModified is too aggressive
-	window.rwdImageChangeSrc = function(image) {
-		if (hasComputedStyle && image.tagName.toLowerCase() === 'img') {
-			var newsrc = window.getComputedStyle(image).getPropertyValue('background-image').replace(/url\((?:"|')?(.*?)(?:"|')?\)/, '$1');
-			if (newsrc !== 'none' && image.src !== newsrc)
-				image.src = newsrc;
+	window.rwdImageChangeSrc = function(imageElem) {
+		var newsrc = window.getComputedStyle(imageElem).getPropertyValue('background-image').replace(/url\((?:"|')?(.*?)(?:"|')?\)/, '$1');
+		if (newsrc !== 'none' && imageElem.src !== newsrc) {
+			imageElem.src = newsrc;
 		}
 	};
 	
 	// Register with enquire.js on each of the images' media queries to change their src
-	var registerWithEnquire = function(x, y) {
-		if (!images[x]['breakpoints'][y]['mediaquery'])
-			return;
-		
-		enquire.register(images[x]['breakpoints'][y]['mediaquery'], function () {
-			rwdImageChangeSrc(images[x]['elem']);
-		});
+	var registerWithEnquire = function(image) {
+		var scopedEventHandler = function() {
+			rwdImageChangeSrc(image['elem']);
+		};
+
+		var y = 0, len = image['breakpoints'].length;
+		for (; y < len; y++) {
+			if (image['breakpoints'][y]['mediaquery']) {
+				enquire.register(image['breakpoints'][y]['mediaquery'], scopedEventHandler);
+			}
+		}
 	};
 	
 	// Loop through any images and set their src using the 2 functions above.
-	for (x; x < images.length; x++) {
-		if (images[x]['isImage']) {
-			for (var y = 0; y < images[x]['breakpoints'].length; y++) {
-				if (hasQuerySelector && hasComputedStyle) {
-					if (hasEnquire)
-						registerWithEnquire(x, y);
-					else
+	if (hasQuerySelector && !!window.getComputedStyle) {
+		if (hasEnquire) {
+			for (x; x < rwdImagesLength; x++) {
+				if (images[x]['isImage']) {
+					registerWithEnquire(images[x]);
+				}
+			}
+		}
+		else {
+			for (x; x < rwdImagesLength; x++) {
+				var y = 0, len = image['breakpoints'].length;
+				for (; y < len; y++) {
+					if (images[x]['isImage']) {
 						rwdImageChangeSrc(images[x]['elem']);
+					}
 				}
 			}
 		}
