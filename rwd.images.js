@@ -220,7 +220,7 @@
 		}
 		else {
 			for (x; x < rwdImagesLength; x++) {
-				var y = 0, len = image['breakpoints'].length;
+				var y = 0, len = images[x]['breakpoints'].length;
 				for (; y < len; y++) {
 					if (images[x]['isImage']) {
 						rwdImageChangeSrc(images[x]['elem']);
