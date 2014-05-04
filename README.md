@@ -25,7 +25,7 @@ In addition to the above, rwd.images.js:
 * Is not restricted to just `<img>` tags. It can be applied to any element (`<div>`s etc) for use as backgrounds.
 * Works using either a mobile-first or a desktop-down philosophy.
 * Has no dependencies, but when combined with [enquire.js](http://wicky.nillia.ms/enquire.js/), is even easier to use and allows users to download and share images as expected.
-* Is only ~1.9 KB minified and gzipped.
+* Is only ~1.7 KB minified and gzipped.
 
 ### OK. Show me how it works
 
@@ -59,6 +59,8 @@ So, the `<img>`:
 
 * Will display `4-by-3.jpg` by default; and
 * At 501px, will be switched to display `16-by-9.jpg`.
+
+*Note that [media queries in JavaScript do not behave identically to those in CSS](https://twitter.com/stowball/status/462119965840388097). If you don't specify a `max-width` media query for the breakpoints, the image's `src` will not be replaced when resizing the browser from wide to narrow.*
 
 #### When used without enquire.js or as backgrounds on other elements
 
