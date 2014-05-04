@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.4.2
+ * RWD Images v0.4.3
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -9,26 +9,17 @@
  *
  * Licensed under the MIT license
 */
-;(function(document) {
+;(function(window, document) {
 	var $rwdImages,
 		rwdImagesLength;
 	
 	// So much faster http://jsperf.com/byclassname-vs-queryselectorall
-	if (document.getElementsByClassName) {
+	if (document.getElementsByClassName)
 		$rwdImages = document.getElementsByClassName('rwdimage');
-	}
-	else if (document.querySelectorAll) {
+	else if (document.querySelectorAll)
 		$rwdImages = document.querySelectorAll('.rwdimage');
-	}
-	else {
-		$rwdImages = [];
-		var $allImages = document.getElementsByTagName('img');
-		
-		for (var a = 0; a < $allImages.length; a++) {
-			if ($allImages[a].className.match(/rwdimage/g))
-				$rwdImages.push($allImages[a]);
-		}
-	}
+	else
+		return;
 	
 	rwdImagesLength = $rwdImages.length;
 	
@@ -56,10 +47,19 @@
 		html,
 		i = 0,
 		x = 0,
-		hasQuerySelector = !!document.querySelector,
 		hasEnquire = !!window.enquire,
 		style;
 	
+	var cssReplace = function(str) {
+		// Remove any leading whitespace, change src: to background-image and calculate ratio percentages
+		return str
+				.replace(/(^\s*)/, '')
+				.replace(/src:\s*/gi, 'background-image: ')
+				.replace(/ratio\((\d+)\/(\d+)\)/gi, function(str, p1, p2) {
+				return ((parseInt(p1, 10) / parseInt(p2, 10)) * 100) + '%';
+				});
+	};
+
 	for (i; i < rwdImagesLength; i++) {
 		$this = $rwdImages[i];
 		
@@ -86,23 +86,12 @@
 			images[i]['isImage'] = true;
 		}
 		
-		if (hasQuerySelector)
-			images[i]['elem'] = document.querySelector(selector);
+		images[i]['elem'] = document.querySelector(selector);
 		
 		dataEm = $this.getAttribute('data-rwdimage-em') === 'true' ? true : false;
-		dataEmBase = $this.getAttribute('data-rwdimage-em-base') ? parseInt($this.getAttribute('data-rwdimage-em-base')) : 16;
+		dataEmBase = $this.getAttribute('data-rwdimage-em-base') ? parseInt($this.getAttribute('data-rwdimage-em-base'), 10) : 16;
 		
 		cssTemp = '';
-		
-		var cssReplace = function(str) {
-			// Remove any leading whitespace, change src: to background-image and calculate ratio percentages
-			return str
-					.replace(/(^\s*)/, '')
-					.replace(/src:\s*/gi, 'background-image: ')
-					.replace(/ratio\((\d+\/\d+)\)/gi, function(str, p1) {
-						return (eval(p1) * 100) + '%';
-					});
-		};
 		
 		for (var j = 0; j < dataCoreLength; j++) {
 			dataCoreCurrent = cssReplace(dataCore[j]);
@@ -116,7 +105,7 @@
 				// If specified, convert pixel media queries to ems
 				if (dataEm) {
 					dataCoreCurrent = dataCoreCurrent.replace(/m(?:in|ax)-(?:width|height):\s*(\d+)px/gi, function(str, p1) {
-						return str.replace(p1, parseInt(p1, 10) / dataEmBase).replace('px', 'em')
+						return str.replace(p1, parseInt(p1, 10) / dataEmBase).replace('px', 'em');
 					});
 				}
 				
@@ -187,15 +176,18 @@
 	
 	document.getElementsByTagName('head')[0].appendChild(style);
 	
-	window.hasComputedStyle = !!window.getComputedStyle;
-	
 	// Change the img src to its computed background-image src. If lazy-loading, fire this externally as DOMAttrModified is too aggressive
 	window.rwdImageChangeSrc = function(image) {
-		if (hasComputedStyle && image.tagName.toLowerCase() === 'img') {
-			var newsrc = window.getComputedStyle(image).getPropertyValue('background-image').replace(/url\((?:"|')?(.*?)(?:"|')?\)/, '$1');
-			if (newsrc !== 'none' && image.src !== newsrc)
-				image.src = newsrc;
-		}
+		if (image.tagName.toLowerCase() !== 'img')
+			return;
+		
+		var newsrc = !!window.getComputedStyle ? window.getComputedStyle(image).getPropertyValue('background-image') : image.currentStyle.backgroundImage;
+		
+		newsrc = newsrc.replace(/url\((?:"|')?(.*?)(?:"|')?\)/, '$1');
+		
+		// Change the img src to its computed background-image src
+		if (newsrc !== 'none' && image.src !== newsrc)
+			image.src = newsrc;
 	};
 	
 	// Register with enquire.js on each of the images' media queries to change their src
@@ -212,13 +204,11 @@
 	for (x; x < images.length; x++) {
 		if (images[x]['isImage']) {
 			for (var y = 0; y < images[x]['breakpoints'].length; y++) {
-				if (hasQuerySelector && hasComputedStyle) {
-					if (hasEnquire)
-						registerWithEnquire(x, y);
-					else
-						rwdImageChangeSrc(images[x]['elem']);
-				}
+				if (hasEnquire)
+					registerWithEnquire(x, y);
+				else
+					rwdImageChangeSrc(images[x]['elem']);
 			}
 		}
 	}
-})(document);
+})(window, document);
