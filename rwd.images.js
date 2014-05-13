@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.4.3
+ * RWD Images v0.4.4
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -38,6 +38,7 @@
 		dataEmBase,
 		dataFallback,
 		dataFallbackClass,
+		isFallback,
 		css = '',
 		cssTemp,
 		width,
@@ -143,14 +144,19 @@
 		
 		// If we're having a fallback for .ltie9 or .no-mq
 		if (dataFallback) {
-			dataFallbackClass = $this.getAttribute('data-rwdimage-fallback-class') ? '.' + $this.getAttribute('data-rwdimage-fallback-class') : '.ltie9';
+			dataFallbackClass = $this.getAttribute('data-rwdimage-fallback-class') ? $this.getAttribute('data-rwdimage-fallback-class') : 'ltie9';
 			
 			// Output the relevant selector
-			cssTemp +=  dataFallbackClass +
+			cssTemp +=  '.' + dataFallbackClass +
 						' ' +
 						selector +
 						cssReplace(dataFallback) +
 						'\n';
+			
+			// Check once only to see if HTML has the fallback class
+			if (!isFallback) {
+				isFallback = document.documentElement.className.match(dataFallbackClass);
+			}
 		}
 		
 		// If we're lazy-loading the images, add .lazy-loaded to the selector
@@ -203,11 +209,13 @@
 	// Loop through any images and set their src using the 2 functions above.
 	for (x; x < images.length; x++) {
 		if (images[x]['isImage']) {
-			for (var y = 0; y < images[x]['breakpoints'].length; y++) {
-				if (hasEnquire)
+			if (!isFallback && hasEnquire) {
+				for (var y = 0; y < images[x]['breakpoints'].length; y++) {
 					registerWithEnquire(x, y);
-				else
-					rwdImageChangeSrc(images[x]['elem']);
+				}
+			}
+			else {
+				rwdImageChangeSrc(images[x]['elem']);
 			}
 		}
 	}
