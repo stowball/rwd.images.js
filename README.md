@@ -47,7 +47,7 @@ Since the plugin solves the responsive image problem with a `background-image` "
 </body>
 ```
 
-At it's simplest, that's it!
+At its simplest, that's it!
 
 ##### So what's this doing?
 
@@ -104,7 +104,7 @@ So here we can see how em-based media queries, retina images and old IE can easi
 Using the remaining `[data-rwdimage-*]` attributes, we can achieve even more:
 
 * `[data-rwdimage-em-base]`: To change the base font size for the calculation of media queries from 16px. Some developers like to set `html { font-size: 62.5%; }` so set `-em-base` to 10.
-* `[data-rwdimage-fallback-class]`: The class (generally on `html`) used to target the fallback browser. The default is `ltie9`, but you may like to set it to `lt-ie9` or `no-mq` if using Modernizr to detect media query support.
+* `[data-rwdimage-fallback-class]`: The class on `html` used to target the fallback browser. The default is `ltie9`, but you may like to set it to `lt-ie9` or `no-mq` if using Modernizr to detect media query support.
 * `[data-rwdimage-retina-suffix]`: The suffix used for high-DPI/retina image filenames. The default is `@2x`. Filenames must follow the convention: [filename][suffix][extension].
 * `[data-rwdimage-lazy-load]`: Set to `true`to only load the `<img>`'s relevant src when it has a class of `lazy-loaded` applied.
 
