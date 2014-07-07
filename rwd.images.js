@@ -1,5 +1,5 @@
 /*!
- * RWD Images v0.4.4
+ * RWD Images v0.4.5
  *
  * A lightweight, customisable responsive image solution, which uses a familar media query syntax
  *
@@ -184,7 +184,7 @@
 	
 	// Change the img src to its computed background-image src. If lazy-loading, fire this externally as DOMAttrModified is too aggressive
 	window.rwdImageChangeSrc = function(image) {
-		if (image.tagName.toLowerCase() !== 'img')
+		if (!image || image.tagName.toLowerCase() !== 'img')
 			return;
 		
 		var newsrc = !!window.getComputedStyle ? window.getComputedStyle(image).getPropertyValue('background-image') : image.currentStyle.backgroundImage;
